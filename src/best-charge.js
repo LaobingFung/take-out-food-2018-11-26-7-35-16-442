@@ -27,6 +27,7 @@ function computeItemsSubtotalList(itemsList) {
     });
     let singlePrice = item.price;
     arr[curI].subtotal = singlePrice * arr[curI].count;
+    arr[curI].name = item.name;
   }, allItems)
   return itemsList;
   //return Arr like
@@ -83,5 +84,9 @@ function computeTotalPrice(itemsPriceList, promotion) {
 }
 
 function getBill(itemsPriceList, promotion, totalPrice) {
+  let output = '============= 订餐明细 =============\n';
+  itemsPriceList.forEach(function(curObj) {
+    output +=
+  })
   //return final bill to print
 }
