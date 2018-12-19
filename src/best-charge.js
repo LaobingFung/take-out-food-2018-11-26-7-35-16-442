@@ -33,20 +33,21 @@ function computeItemsSubtotalList(itemsList) {
   //[{id: "ITEM0001", count: 1, subtotal: 18.00}, {id: "ITEM0013", count: 2, subtotal: 12.00}, {id: "ITEM0022", count: 1, subtotal: 8.00}]
 }
 
-function computeDiscount(itemsPriceList) {
+function computePromotions(itemsPriceList) {
   let promotions = loadPromotions();
-  let totalPriceTemp = itemsPriceList.reduce((acc, curObj) => {
-    return acc += curObj.subtotal
-  }, 0);
-  let discount6Per30 = Math.floor(totalPriceTemp / 30) * 6;
-  let discountHalf = itemsPriceList.reduce((acc, curObj) => {
-    if (promotions[1].items.includes(curObj.id)) {
-      return acc += curObj.subtotal / 2;
-    }
-  }, 0);
-  let discountObj = discount6Per30 >= discountHalf ?
-    //return Object like {type: '满30减6元', discount: 6.00}
-    //or {type: '指定菜品半价',items: ['ITEM0001', 'ITEM0022'], discount: 13.00}
+  let discount6Per30 = computeDiscount6Per30(itemsPriceList, promotions);
+  let discountHalf = computeDiscountHalf(itemsPriceList, promotions);
+  let discountObj = discount6Per30 >= discountHalf.discount ? {
+    "type": '满30减6元',
+    "discount": discount6Per30
+  } : {
+    "type": '指定菜品半价',
+    "items": discountHalf.specialItems,
+    "discount": discountHalf.discount
+  }
+  return promotionsObj;
+  //return Object like {type: '满30减6元', discount: 6.00}
+  //or {type: '指定菜品半价',items: ['ITEM0001', 'ITEM0022'], discount: 13.00}
 }
 
 function computeDiscount6Per30(itemsPriceList, promotions) {
@@ -68,7 +69,7 @@ function computeDiscountHalf(itemsPriceList, promotions) {
   return {
     "discount": discount,
     "specialItems": itemsToDiscount.map((curObj) => {
-        return curObj.id;
+      return curObj.id;
     })
   };
 }
