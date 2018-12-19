@@ -75,6 +75,10 @@ function computeDiscountHalf(itemsPriceList, promotions) {
 }
 
 function computeTotalPrice(itemsPriceList, promotion) {
+  let totalPriceTemp = itemsPriceList.reduce((acc, curObj) => {
+    return acc += curObj.subtotal
+  }, 0);
+  return totalPrice = totalPriceTemp - promotion.discount;
   //return Number totalPrice
 }
 
