@@ -31,7 +31,9 @@ function computeItemsSubtotalList(itemsList) {
   }, allItems)
   return itemsList;
   //return Arr like
-  //[{id: "ITEM0001", count: 1, subtotal: 18.00}, {id: "ITEM0013", count: 2, subtotal: 12.00}, {id: "ITEM0022", count: 1, subtotal: 8.00}]
+  //[{id: "ITEM0001", count: 1, subtotal: 18.00, name: '黄焖鸡'},
+  // {id: "ITEM0013", count: 2, subtotal: 12.00}, name: '肉夹馍'
+  // {id: "ITEM0022", count: 1, subtotal: 8.00， name: '凉皮'}]
 }
 
 function computePromotions(itemsPriceList) {
@@ -70,7 +72,7 @@ function computeDiscountHalf(itemsPriceList, promotions) {
   return {
     "discount": discount,
     "specialItems": itemsToDiscount.map((curObj) => {
-      return curObj.id;
+      return curObj.name;
     })
   };
 }
@@ -86,7 +88,15 @@ function computeTotalPrice(itemsPriceList, promotion) {
 function getBill(itemsPriceList, promotion, totalPrice) {
   let output = '============= 订餐明细 =============\n';
   itemsPriceList.forEach(function(curObj) {
-    output +=
+    item = curObj.name + ' x ' + curObj.count + ' = ' + curObj.subtotal + '元\n';
+    output += item;
   })
+  output += '-----------------------------------\n';
+  output += promotion.type;
+  if (promotion.type === '满30减6元') {
+    output += '使用优惠:\n满30减6元，省' + promotion.discount.toString() + '元\n';
+  } else if (promotion.type === '指定菜品半价') {
+    output += '使用优惠:\n指定菜品半价' +
+  }
   //return final bill to print
 }
