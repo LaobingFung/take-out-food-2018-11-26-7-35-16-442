@@ -15,9 +15,20 @@ function getItemsList(originalArr) {
     };
   });
   return itemsList;
+  //return Arr like
+  //[{id: "ITEM0001", count: 1}, {id: "ITEM0013", count: 2}, {id: "ITEM0022", count: 1}]
 }
 
-function computeItemsPriceList(itemslist) {
+function computeItemsSubtotalList(itemsList) {
+  let allItems = loadAllItems();
+  itemsList.forEach(function(curItem, curI, arr) {
+    let item = this.find(function(curItemAll) {
+      return curItemAll.id === curItem.id;
+    });
+    let singlePrice = item.price;
+    arr[curI].subtotal = singlePrice * arr[curI].count;
+  }, allItems)
+  return itemsList;
   //return Arr like
   //[{id: "ITEM0001", count: 1, subtotal: 18.00}, {id: "ITEM0013", count: 2, subtotal: 12.00}, {id: "ITEM0022", count: 1, subtotal: 8.00}]
 }
