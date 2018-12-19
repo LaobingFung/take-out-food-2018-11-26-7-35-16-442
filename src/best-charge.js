@@ -3,7 +3,13 @@ var loadAllItems = require("items.js");
 var loadPromotions = require("promotions");
 
 function bestCharge(selectedItems) {
-  return /*TODO*/;
+  // let allItems = loadAllItems();
+  // let promotions = loadPromotions();
+  let itemsList = getItemsList(selectedItems);
+  let itemsPriceList = computeItemsSubtotalList(itemsList);
+  let promotion = computeDiscount(itemsPriceList);
+  let totalPrice = computeTotalPrice(itemsPriceList, promotion);
+  return getBill(itemsPriceList, promotion, totalPrice);
 }
 
 function getItemsList(originalArr) {
@@ -36,11 +42,11 @@ function computeItemsSubtotalList(itemsList) {
   // {id: "ITEM0022", count: 1, subtotal: 8.00， name: '凉皮'}]
 }
 
-function computePromotions(itemsPriceList) {
+function computeDiscount(itemsPriceList) {
   let promotions = loadPromotions();
   let discount6Per30 = computeDiscount6Per30(itemsPriceList, promotions);
   let discountHalf = computeDiscountHalf(itemsPriceList, promotions);
-  let discountObj = discount6Per30 >= discountHalf.discount ? {
+  let promotionsObj = discount6Per30 >= discountHalf.discount ? {
     "type": '满30减6元',
     "discount": discount6Per30
   } : {
@@ -57,7 +63,7 @@ function computeDiscount6Per30(itemsPriceList, promotions) {
   let totalPriceTemp = itemsPriceList.reduce((acc, curObj) => {
     return acc += curObj.subtotal
   }, 0);
-  return discount = Math.floor(totalPriceTemp / 30) * 6;
+  return Math.floor(totalPriceTemp / 30) * 6;
 }
 
 function computeDiscountHalf(itemsPriceList, promotions) {
@@ -81,14 +87,14 @@ function computeTotalPrice(itemsPriceList, promotion) {
   let totalPriceTemp = itemsPriceList.reduce((acc, curObj) => {
     return acc += curObj.subtotal
   }, 0);
-  return totalPrice = totalPriceTemp - promotion.discount;
+  return totalPriceTemp - promotion.discount;
   //return Number totalPrice
 }
 
 function getBill(itemsPriceList, promotion, totalPrice) {
   let output = '============= 订餐明细 =============\n';
   itemsPriceList.forEach(function(curObj) {
-    item = curObj.name + ' x ' + curObj.count + ' = ' + curObj.subtotal + '元\n';
+    let item = curObj.name + ' x ' + curObj.count + ' = ' + curObj.subtotal + '元\n';
     output += item;
   })
   output += '-----------------------------------\n';
@@ -98,8 +104,8 @@ function getBill(itemsPriceList, promotion, totalPrice) {
   } else if (promotion.type === '指定菜品半价') {
     output += '使用优惠:\n指定菜品半价(';
     promotion.names.forEach(function(curStr, curI, arr) {
-        output += curStr;
-        output += (curI === (arr.length - 1)) ? '，' :')，省';
+      output += curStr;
+      output += (curI === (arr.length - 1)) ? '，' : ')，省';
     })
     output += promotion.discount.toString() + '元\n';
   }
